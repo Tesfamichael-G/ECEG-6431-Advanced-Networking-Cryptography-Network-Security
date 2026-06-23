@@ -1,0 +1,123 @@
+<h3>What is a Socket?</h3>
+<p>
+    A <strong>socket</strong> is a software endpoint that enables communication between two processes over a network.
+    It is identified by a combination of an <strong>IP address</strong> and a <strong>port number</strong>.
+    Sockets abstract the underlying transport‑layer protocols (TCP or UDP) and provide a standard interface for
+    sending and receiving data.
+</p>
+
+<h3>Types of Sockets</h3>
+<ul>
+    <li>
+        <strong>Stream Sockets (TCP)</strong> – connection‑oriented, reliable, ordered, and error‑checked.
+        Data is delivered as a continuous stream of bytes without message boundaries.
+    </li>
+    <li>
+        <strong>Datagram Sockets (UDP)</strong> – connectionless, best‑effort delivery, unordered,
+        and preserves message boundaries. No guarantee of delivery or order.
+    </li>
+    <li>
+        <strong>Raw Sockets</strong> – allow direct access to lower‑layer protocols (e.g., ICMP, IGMP).
+        Typically used for network diagnostics and custom protocol implementations.
+    </li>
+</ul>
+
+<h3>The Client‑Server Model</h3>
+<p>
+    In a client‑server architecture, the <strong>server</strong> listens on a well‑known port, waiting for
+    incoming connection requests. The <strong>client</strong> initiates the communication by connecting to
+    the server’s IP address and port. Once the connection is established, data flows bidirectionally.
+</p>
+
+<h3>Socket Interface and TCP Connection Features</h3>
+<p>The standard POSIX socket API (used in C) and its Java counterpart provide a set of functions to create and manage
+    sockets.</p>
+<ul>
+    <li><code>socket()</code> – creates a socket descriptor.</li>
+    <li><code>bind()</code> – assigns a local address and port to a socket.</li>
+    <li><code>listen()</code> – marks a socket as passive to accept connections (server only).</li>
+    <li><code>accept()</code> – accepts an incoming client connection and returns a new socket for communication.</li>
+    <li><code>connect()</code> – initiates a connection to a remote server (client).</li>
+    <li><code>send()</code>/<code>recv()</code> – transmit and receive data (TCP).</li>
+    <li><code>sendto()</code>/<code>recvfrom()</code> – used for UDP datagrams.</li>
+</ul>
+<p>A TCP connection is <strong>full‑duplex</strong>, <strong>reliable</strong>, and provides <strong>flow
+        control</strong> and <strong>congestion control</strong>.</p>
+
+<h3>Byte Ordering</h3>
+<p>
+    Different CPU architectures store multi‑byte integers differently: <strong>little‑endian</strong>
+    (least significant byte first) vs. <strong>big‑endian</strong> (most significant byte first).
+    To ensure interoperability, network protocols use a standard <strong>big‑endian (network byte order)</strong>.
+</p>
+<p>
+    Functions like <code>htons()</code>, <code>htonl()</code>, <code>ntohs()</code>, and <code>ntohl()</code>
+    convert between host byte order and network byte order for 16‑bit and 32‑bit values respectively.
+</p>
+
+<div class="callout">
+    <strong>💡 Always convert multi‑byte data to network byte order before sending, and back to host byte order upon
+        receipt.</strong>
+</div>
+
+<h3>Address Structures</h3>
+<p>The standard address structure for IPv4 in C is <code>sockaddr_in</code>:</p>
+<pre><code>struct sockaddr_in {
+    sa_family_t    sin_family;  // AF_INET
+    in_port_t      sin_port;    // 16‑bit port number (network byte order)
+    struct in_addr sin_addr;    // 32‑bit IPv4 address (network byte order)
+    char           sin_zero[8]; // padding
+};</code></pre>
+<p>For IPv6, <code>sockaddr_in6</code> is used. In Java, the <code>InetAddress</code> class abstracts this complexity.
+</p>
+
+<h3>Ports and Address Conversion Functions</h3>
+<p>
+    <strong>Port numbers</strong> (0–65535) identify specific services; well‑known ports are 0‑1023.
+    <code>inet_pton()</code> converts a textual IP address to binary network format, while
+    <code>inet_ntop()</code> performs the reverse. Older functions (<code>inet_addr()</code>,
+    <code>inet_ntoa()</code>) are deprecated.
+</p>
+
+<h3>Outline of a TCP Server</h3>
+<ol>
+    <li>Create a socket with <code>socket()</code>.</li>
+    <li>Bind the socket to a local address and port using <code>bind()</code>.</li>
+    <li>Mark the socket as passive with <code>listen()</code>.</li>
+    <li>Accept a client connection with <code>accept()</code>, which returns a new socket.</li>
+    <li>Exchange data using <code>send()</code> and <code>recv()</code>.</li>
+    <li>Close the connection with <code>close()</code>.</li>
+</ol>
+
+<h3>Outline of a TCP Client</h3>
+<ol>
+    <li>Create a socket with <code>socket()</code>.</li>
+    <li>Connect to the server’s address and port using <code>connect()</code>.</li>
+    <li>Exchange data using <code>send()</code> and <code>recv()</code>.</li>
+    <li>Close the connection with <code>close()</code>.</li>
+</ol>
+
+<h3>Client‑Server Communication Flow</h3>
+<p>
+    A typical exchange: the client sends a request (e.g., an HTTP GET), the server processes it and
+    returns a response (e.g., a web page). This request‑response cycle repeats until one side closes
+    the connection. In a multi‑client scenario, the server typically forks a new process or thread for
+    each client.
+</p>
+
+<h3>Practical Example (C Skeleton)</h3>
+<pre><code>// Server snippet
+int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+struct sockaddr_in addr;
+addr.sin_family = AF_INET;
+addr.sin_port = htons(8080);
+inet_pton(AF_INET, "0.0.0.0", &addr.sin_addr);
+bind(server_fd, (struct sockaddr*)&addr, sizeof(addr));
+listen(server_fd, 5);
+int client_fd = accept(server_fd, NULL, NULL);
+// ... receive / send data ...
+close(client_fd);
+close(server_fd);</code></pre>
+
+<p>This module lays the foundation for understanding how networked applications communicate at the transport layer. In
+    subsequent modules, we will build on these concepts to explore higher‑level protocols and security mechanisms.</p>

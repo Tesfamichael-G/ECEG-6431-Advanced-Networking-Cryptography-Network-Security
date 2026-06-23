@@ -1,0 +1,1007 @@
+/* ===== CSS Variables (Light & Dark) ===== */
+:root {
+    /* Light theme */
+    --bg: #f1f5f9;
+    --text: #0f172a;
+    --sidebar-bg: rgba(255, 255, 255, 0.9);
+    --sidebar-blur: blur(16px);
+    --sidebar-text: #1e293b;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-soft: #e0e7ff;
+    --accent: #e2e8f0;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --border: #cbd5e1;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow: 0 8px 24px rgba(0,0,0,0.06);
+    --toggle-bg: #ffffff;
+    --toggle-border: #cbd5e1;
+    --gradient-hero: linear-gradient(135deg, #eef2ff 0%, #f3e8ff 100%);
+
+    /* Code specific light theme */
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --inline-code-bg: #e2e8f0;
+    --inline-code-text: #b91c1c;
+}
+[data-theme="dark"] {
+    --bg: #191a1e;
+    --text: #e2e8f0;
+    --sidebar-bg: rgba(15, 23, 42, 0.85);
+    --sidebar-blur: blur(18px);
+    --sidebar-text: #cbd5e1;
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --primary-soft: #1e1b4b;
+    --accent: #1e293b;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --border: #334155;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow: 0 8px 24px rgba(0,0,0,0.4);
+    --toggle-bg: #1e293b;
+    --toggle-border: #475569;
+    --gradient-hero: linear-gradient(135deg, #1e1b4b 0%, #1e293b 100%);
+
+    /* Code specific dark theme */
+    --code-bg: #0f172a;
+    --code-text: #e2e8f0;
+    --inline-code-bg: #334155;
+    --inline-code-text: #fca5a5;
+}
+
+/* ===== Reset & Base ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ===== Mode Toggle ===== */
+.mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 28px;
+    z-index: 1000;
+    background: var(--toggle-bg);
+    -webkit-backdrop-filter: var(--sidebar-blur);
+    backdrop-filter: var(--sidebar-blur);
+    border: 1px solid var(--toggle-border);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    font-size: 1.2rem;
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+.mode-toggle:hover {
+    background: var(--primary-soft);
+    box-shadow: var(--shadow);
+    transform: rotate(15deg);
+}
+
+/* ===== Sidebar ===== */
+#sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    -webkit-backdrop-filter: var(--sidebar-blur);
+    backdrop-filter: var(--sidebar-blur);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 24px 0;
+    overflow-y: auto;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+}
+.sidebar-header {
+    padding: 16px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+}
+.sidebar-header h3 {
+    color: var(--primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.sidebar-header p {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 4px;
+    color: var(--sidebar-text);
+}
+.nav-links {
+    list-style: none;
+    padding: 0 12px;
+    flex: 1;
+}
+.nav-links li {
+    margin: 2px 0;
+}
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+.nav-link:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+.nav-link.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+}
+
+/* ===== Main Content ===== */
+#main-content {
+    margin-left: 260px;
+    padding: 40px 48px;
+    max-width: 960px;
+    flex: 1;
+}
+
+/* ===== Hero ===== */
+#hero {
+    background: var(--gradient-hero);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 32px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.hero-badges {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-course { background: #d1fae5; color: #065f46; }
+.badge-lang    { background: #fef3c7; color: #92400e; }
+.badge-credits { background: #dbeafe; color: #1e3a8a; }
+
+#hero h1 {
+    font-size: 2.8rem;
+    margin: 16px 0;
+    color: var(--primary);
+    font-weight: 800;
+    line-height: 1.2;
+}
+.dept, .uni {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin: 4px 0;
+    font-weight: 500;
+    color: var(--text);
+}
+.cta-btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 14px 32px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+}
+.cta-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+}
+
+/* ===== Sections ===== */
+section {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+section:hover {
+    box-shadow: var(--shadow);
+    border-color: var(--primary-soft);
+}
+section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid var(--primary-soft);
+    padding-bottom: 12px;
+    font-weight: 700;
+}
+section h2 i {
+    color: var(--primary);
+}
+
+/* Lists */
+.checklist {
+    list-style: none;
+    font-size: 1rem;
+}
+.checklist li {
+    margin: 10px 0;
+}
+
+/* ===== Table ===== */
+.table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+}
+th, td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+th {
+    background: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text);
+}
+td a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 1.1rem;
+    margin: 0 6px;
+    transition: color 0.2s;
+}
+td a:hover {
+    color: var(--primary-hover);
+}
+
+/* ===== Assessment ===== */
+.assessment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.assess-item {
+    background: var(--accent);
+    padding: 18px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+.weight {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+/* ===== Textbooks ===== */
+.textbook-primary {
+    background: var(--primary-soft);
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary);
+}
+.textbook-primary h3 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+
+/* ===== Teaching Methods ===== */
+.method-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.method-item {
+    background: var(--accent);
+    padding: 10px 22px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.method-item:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+/* ===== IDE Links ===== */
+.ide-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+.ide-links a {
+    background: var(--accent);
+    padding: 8px 18px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.ide-links a:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+/* ===== Footer ===== */
+footer {
+    text-align: center;
+    padding: 24px;
+    opacity: 0.65;
+    font-size: 0.85rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 12px;
+        border-bottom: 1px solid var(--border);
+        border-right: none;
+    }
+    .sidebar-header {
+        display: none;
+    }
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .nav-link {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    #main-content {
+        margin-left: 0;
+        padding: 20px 16px;
+    }
+    #hero {
+        padding: 28px 20px;
+    }
+    #hero h1 {
+        font-size: 1.8rem;
+    }
+    section {
+        padding: 20px;
+    }
+}
+
+/* ===== Notes Page Layout ===== */
+.notes-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.notes-sidebar {
+    width: 350px;
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--sidebar-blur);
+    border-right: 1px solid var(--border);
+    padding: 24px 12px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.notes-sidebar h3 {
+    color: var(--primary);
+    margin-bottom: 18px;
+    padding: 0 12px;
+    font-weight: 700;
+}
+.module-list {
+    list-style: none;
+}
+.module-list li a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    border-radius: 10px;
+    margin: 3px 0;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.module-list li a:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+.module-list li a.active {
+    background: var(--primary);
+    color: #fff;
+}
+.notes-content {
+    flex: 1;
+    padding: 32px 0 16px 32px;
+    max-width: 900px;
+}
+
+/* ===== Lecture Notes Content ===== */
+#moduleNotes {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.8;
+    color: var(--text);
+    max-width: 800px;
+}
+#moduleNotes h3 {
+    font-size: 1.5rem;
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+    color: var(--primary);
+    border-left: 5px solid var(--primary);
+    padding-left: 16px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+#moduleNotes p {
+    margin-bottom: 1.2em;
+}
+#moduleNotes ul,
+#moduleNotes ol {
+    margin: 0.8em 0 1.2em 1.5em;
+    padding: 0;
+}
+#moduleNotes li {
+    margin-bottom: 0.5em;
+}
+#moduleNotes ul li::marker {
+    color: var(--primary);
+}
+
+/* -------- FIX: Inline code background now clearly visible -------- */
+#moduleNotes code {
+    background: var(--inline-code-bg);
+    padding: 0.2em 0.5em;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    color: var(--inline-code-text);
+    border: 1px solid var(--border);
+}
+/* -------- FIX: Block code always dark with readable text -------- */
+#moduleNotes pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 20px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 1.5em 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border: 1px solid var(--border);
+}
+/* Callout box */
+#moduleNotes .callout {
+    background: var(--primary-soft);
+    border-left: 5px solid var(--primary);
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 1.5em 0;
+    font-weight: 500;
+}
+#moduleNotes strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+/* Mini TOC */
+#miniToc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 2em;
+    box-shadow: var(--shadow-sm);
+}
+#miniToc h3 {
+    margin-top: 0;
+    border: none;
+    padding-left: 0;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+#miniToc ul {
+    list-style: none;
+    padding: 0;
+}
+#miniToc li {
+    margin-bottom: 6px;
+}
+#miniToc a {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+#miniToc a::before {
+    content: "▹";
+    color: var(--primary);
+}
+#miniToc a:hover {
+    color: var(--primary);
+}
+
+/* ===== Interactive Quiz / Practice ===== */
+.quiz-question {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+}
+.quiz-option:hover {
+    background: var(--accent);
+    border-color: var(--primary-soft);
+}
+.quiz-option input[type="radio"] {
+    accent-color: var(--primary);
+}
+.quiz-option.correct {
+    background: #d1fae5;
+    border-color: #6ee7b7;
+}
+.quiz-option.incorrect {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+.quiz-feedback {
+    margin-top: 12px;
+    font-weight: 500;
+    display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-text { color: #065f46; }
+.quiz-feedback.incorrect-text { color: #991b1b; }
+[data-theme="dark"] .quiz-option.correct {
+    background: #064e3b;
+    border-color: #34d399;
+}
+[data-theme="dark"] .quiz-option.incorrect {
+    background: #7f1d1d;
+    border-color: #f87171;
+}
+[data-theme="dark"] .quiz-feedback.correct-text { color: #6ee7b7; }
+[data-theme="dark"] .quiz-feedback.incorrect-text { color: #fca5a5; }
+
+/* ===== Engines (MCQ, Code, Fill-in) ===== */
+.quiz-container, .code-predict-container, .fib-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.question-card, .fib-exercise {
+    background: var(--accent);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+/* Code Prediction Block */
+.code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 16px;
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: pre-wrap;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    background: var(--primary);
+    color: #fff;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 10px rgba(79,70,229,0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.fib-exercise input[type="text"] {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* 1. Reset the "highlight" for code inside pre blocks */
+#moduleNotes pre code {
+    background: transparent; /* Removes the "highlighted box" look */
+    color: inherit;          /* Follows the pre block's text color */
+    padding: 0;
+    border: none;
+}
+
+/* 2. Update Code Specific Themes for better legibility */
+:root {
+    /* ... existing vars ... */
+    --code-bg: #1e293b;       /* Deep slate */
+    --code-text: #f8fafc;     /* Off-white for high contrast */
+    --inline-code-bg: #f1f5f9;
+    --inline-code-text: #475569; /* Use a neutral slate instead of red */
+}
+
+[data-theme="dark"] {
+    /* ... existing vars ... */
+    --code-bg: #020617;       /* Near black */
+    --code-text: #e2e8f0;
+    --inline-code-bg: #334155;
+    --inline-code-text: #cbd5e1;
+}
+
+/* 3. Refined Block Styling */
+#moduleNotes pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.6;
+}
+/* Container for each question */
+.question-card {
+    /* background: var(--card-bg);  */
+    /* border: 1px solid var(--border); */
+    /* border-radius: 16px; */
+    /* padding: 24px; */
+    /* margin-bottom: 24px; */
+    /* box-shadow: var(--shadow-sm); */
+}
+
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--text);
+}
+
+/* Options Layout */
+.options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7x;
+}
+
+/* Individual Option as a Button */
+.options label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    /* background: var(--bg);  */
+    /* border: 1px solid var(--border); */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.options label:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft); /* Highlight on hover */
+}
+
+/* Radio Button Styling */
+.options input[type="radio"] {
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+}
+
+/* Action Buttons (Submit/Reset) */
+.quiz-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+/* Feedback Styling */
+.feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Card for each exercise */
+.code-exercise {
+    /* background: var(--card-bg); */
+    /* border: 1px solid var(--border); */
+    border-radius: 16px;
+    padding: 24px;
+    /* margin-bottom: 32px; */
+    /* box-shadow: var(--shadow-sm); */
+}
+
+.code-exercise h4 {
+    color: var(--primary);
+    margin-bottom: 12px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Prediction Input Area */
+.prediction-area {
+    margin: 20px 0;
+}
+
+.prediction-area label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+/* Styled Textarea to look like a terminal/console */
+.prediction-area textarea {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.prediction-area textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--card-bg);
+}
+
+/* Feedback Comparison Box */
+.output-comparison {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    display: none; /* Hidden until button click */
+}
+
+/* Success/Error States for Prediction */
+.prediction-correct {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    color: #065f46;
+}
+
+.prediction-wrong {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid #ef4444;
+    color: #991b1b;
+}
+
+/* Container for the FIB exercise */
+.fib-exercise {
+    background: var(--card-bg); /* Use card background */
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    line-height: 1.8; /* Improves readability for inline inputs */
+}
+
+.sentence {
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
+
+/* Placeholder styling to make it look like a prompt */
+.blank input::placeholder {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--border);
+    font-style: italic;
+}
+
+/* Success/Error Feedback */
+.fib-feedback {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+
+/* The Blank / Input Styling */
+.blank {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.blank input {
+    /* Remove default styling */
+    border: none;
+    outline: none;
+    background: transparent;
+    
+    /* Create the "Dash" effect */
+    border-bottom: 2px solid var(--primary); /* Thick primary color underline */
+    
+    /* Formatting */
+    padding: 0 5px;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    color: var(--primary);
+    width: 120px; /* Fixed width for the dash */
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+/* Change style when user is typing */
+.blank input:focus {
+    border-bottom-color: var(--primary-hover);
+    background: var(--primary-soft); /* Subtle highlight when active */
+    border-radius: 4px 4px 0 0;
+}
+
+/* target the specific container to ensure higher specificity */
+#fillBlankEngine .blank input[type="text"] {
+    /* 1. Complete Reset of Browser Defaults */
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    
+    /* 2. Create the Underline (Dash) */
+    border-bottom: 2px solid var(--primary) !important;
+    border-radius: 0;
+    
+    /* 3. Text & Layout Styling */
+    color: var(--text);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0 4px;
+    margin: 0 4px;
+    width: 120px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+/* Focused State: When the student clicks to type */
+#fillBlankEngine .blank input[type="text"]:focus {
+    outline: none;
+    border-bottom-color: var(--primary-hover) !important;
+    background-color: var(--primary-soft) !important; /* Subtle highlight above the dash */
+}
+
+/* Placeholder Styling: Make the "your answer" text faint */
+#fillBlankEngine .blank input[type="text"]::placeholder {
+    color: var(--border);
+    font-size: 0.8rem;
+    font-weight: 400;
+}

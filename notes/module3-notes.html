@@ -1,0 +1,140 @@
+<h3>Foundations of Number Theory</h3>
+<p>
+    Cryptography is built upon the hard mathematical problems of number theory. This module provides the essential
+    toolbox: from prime numbers to modular arithmetic and discrete logarithms. Understanding these concepts is
+    crucial for grasping public‑key cryptosystems like RSA, Diffie‑Hellman, and elliptic curve cryptography.
+</p>
+
+<h3>Prime and Relatively Prime Numbers</h3>
+<p>
+    A <strong>prime number</strong> is an integer greater than 1 that has no positive divisors other than 1 and itself.
+    Examples: 2, 3, 5, 7, 11, …
+    A <strong>composite</strong> number has more than two factors. The <strong>Fundamental Theorem of
+        Arithmetic</strong>
+    states that every integer greater than 1 can be expressed uniquely as a product of primes (up to ordering).
+</p>
+<p>
+    Two integers <em>a</em> and <em>b</em> are said to be <strong>relatively prime</strong> (or
+    <strong>coprime</strong>)
+    if their greatest common divisor is 1, i.e. <code>gcd(a, b) = 1</code>. For example, 8 and 9 are coprime, while
+    8 and 12 are not (gcd = 4).
+</p>
+
+<h3>Modular Arithmetic</h3>
+<p>
+    Given an integer <em>n</em> > 1, we say two integers <em>a</em> and <em>b</em> are <strong>congruent modulo
+        n</strong>,
+    written <em>a ≡ b (mod n)</em>, if <em>n</em> divides <em>(a – b)</em>. This is equivalent to <em>a</em> and
+    <em>b</em> having the same remainder when divided by <em>n</em>.
+</p>
+<p>
+    The set of integers modulo <em>n</em>, denoted ℤ<sub>n</sub> = {0, 1, 2, …, n‑1}, forms a ring under addition and
+    multiplication modulo <em>n</em>. The <strong>multiplicative inverse</strong> of <em>a</em> modulo <em>n</em> exists
+    if and only if <code>gcd(a, n) = 1</code>. It can be found using the Extended Euclidean Algorithm.
+</p>
+
+<h3>Fermat’s Little Theorem</h3>
+<p>
+    If <em>p</em> is a prime and <em>a</em> is an integer not divisible by <em>p</em>, then
+</p>
+<p style="text-align:center; font-size:1.1rem;"><strong>a<sup>p–1</sup> ≡ 1 (mod p)</strong></p>
+<p>
+    For example, let <em>p = 7</em> and <em>a = 3</em>. Then 3<sup>6</sup> = 729 ≡ 1 (mod 7).
+    Fermat’s theorem is the basis of many primality tests and underlies the correctness of RSA decryption.
+</p>
+
+<h3>Euler’s Theorem</h3>
+<p>
+    <strong>Euler’s totient function</strong> φ(<em>n</em>) counts the positive integers up to <em>n</em> that are
+    relatively prime to <em>n</em>. For a prime <em>p</em>, φ(<em>p</em>) = <em>p</em> – 1. For a product of two
+    distinct primes <em>p</em> and <em>q</em>, φ(<em>pq</em>) = (<em>p</em>–1)(<em>q</em>–1).
+</p>
+<p>
+    <strong>Euler’s theorem</strong> generalises Fermat’s little theorem: if <code>gcd(a, n) = 1</code>, then
+</p>
+<p style="text-align:center; font-size:1.1rem;"><strong>a<sup>φ(n)</sup> ≡ 1 (mod n)</strong></p>
+<p>
+    This theorem is essential in RSA because it guarantees that encryption and decryption are inverse operations
+    when working in the multiplicative group modulo <em>n</em>.
+</p>
+
+<h3>Testing for Primality</h3>
+<p>
+    A <strong>primality test</strong> determines whether a given integer is prime. Two main approaches exist:
+</p>
+<ul>
+    <li><strong>Deterministic tests</strong> (e.g., trial division, AKS) – guarantee a correct answer but are often slow
+        for large numbers.</li>
+    <li><strong>Probabilistic tests</strong> (e.g., Miller–Rabin) – provide a high probability of correctness; widely
+        used in practice.</li>
+</ul>
+<p>
+    The <strong>Miller–Rabin test</strong> is based on Fermat’s little theorem and modular exponentiation.
+    For a candidate <em>n</em>, it checks whether a randomly chosen base <em>a</em> satisfies certain congruences.
+    After enough rounds with different bases, the probability of a composite passing becomes negligible.
+</p>
+
+<h3>Euclid’s Algorithm</h3>
+<p>
+    The <strong>Euclidean algorithm</strong> efficiently computes the greatest common divisor (gcd) of two integers.
+    It is based on the observation that <code>gcd(a, b) = gcd(b, a mod b)</code>.
+</p>
+<pre><code>// Iterative implementation
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}</code></pre>
+<p>
+    The <strong>Extended Euclidean algorithm</strong> also finds integers <em>x</em> and <em>y</em> such that
+    <code>a·x + b·y = gcd(a, b)</code>. This is crucial for computing modular inverses.
+</p>
+
+<h3>The Chinese Remainder Theorem (CRT)</h3>
+<p>
+    The CRT solves systems of congruences with pairwise coprime moduli. If we have:
+</p>
+<pre><code>x ≡ a<sub>1</sub> (mod m<sub>1</sub>)
+x ≡ a<sub>2</sub> (mod m<sub>2</sub>)
+…
+x ≡ a<sub>k</sub> (mod m<sub>k</sub>)</code></pre>
+<p>
+    and the moduli <em>m<sub>i</sub></em> are pairwise coprime, then there exists a unique solution
+    modulo <em>M = m<sub>1</sub>·m<sub>2</sub>·…·m<sub>k</sub></em>.
+</p>
+<p>
+    The solution is constructed using the formula:<br>
+    <em>x = (a<sub>1</sub>·M<sub>1</sub>·y<sub>1</sub> + a<sub>2</sub>·M<sub>2</sub>·y<sub>2</sub> + …) mod M</em>,
+    where <em>M<sub>i</sub> = M / m<sub>i</sub></em> and <em>y<sub>i</sub></em> is the modular inverse of
+    <em>M<sub>i</sub></em> modulo <em>m<sub>i</sub></em>.
+</p>
+<p>
+    CRT is used to speed up RSA decryption (by computing modulo p and q separately) and in several cryptographic
+    protocols.
+</p>
+
+<h3>Discrete Logarithms</h3>
+<p>
+    Given a prime <em>p</em>, a generator (primitive root) <em>g</em> of the multiplicative group
+    ℤ<em><sub>p</sub></em>*,
+    and an element <em>h</em> in the group, the <strong>discrete logarithm problem</strong> is to find an integer
+    <em>x</em> such that <code>g<sup>x</sup> ≡ h (mod p)</code>.
+</p>
+<p>
+    While modular exponentiation is easy (fast exponentiation), computing the discrete logarithm is believed to be
+    computationally hard. This asymmetry is the foundation of the <strong>Diffie–Hellman key exchange</strong>,
+    the <strong>Digital Signature Algorithm (DSA)</strong>, and <strong>ElGamal encryption</strong>.
+</p>
+<p>
+    The same concept applies to elliptic curves, where the discrete logarithm problem in the group of points on a curve
+    forms the basis of <strong>ECC</strong>.
+</p>
+
+<div class="callout">
+    <strong>💡 Summary:</strong> Modular arithmetic, prime numbers, and the hardness of problems like factoring and
+    discrete logarithms are the building blocks of modern cryptographic systems. A solid grasp of these number‑theoretic
+    concepts is essential for understanding the security of the algorithms discussed in later modules.
+</div>

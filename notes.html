@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Notes – ECEg-6431</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="notes-layout">
+        <nav class="notes-sidebar" id="notesSidebar">
+            <h3>Modules</h3>
+            <ul class="module-list" id="moduleList"></ul>
+        </nav>
+
+        <main class="notes-content" id="notesContent">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Course Page</a>
+            <div id="moduleNotes">
+                <div class="loading-notes">Loading notes...</div>
+            </div>
+            <div class="quiz-container" id="quizContainer">
+                <h3>🧪 MCQ Quiz</h3>
+                <div id="quizEngine"></div>
+            </div>
+            <div class="code-predict-container" id="codePredictContainer">
+                <h3>⚡ Problem Solving</h3>
+                <div id="codeEngine"></div>
+            </div>
+            <div class="fib-container" id="fibContainer">
+                <h3>✍️ Fill in the Blanks</h3>
+                <div id="fillBlankEngine"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="notes-data.js"></script>
+    <script src="quiz-engine.js"></script>
+    <script src="code-engine.js"></script>
+    <script src="fill-blank-engine.js"></script>
+    <script>
+        (function () {
+            // Dark mode toggle
+            const toggleBtn = document.getElementById("modeToggle");
+            const icon = toggleBtn.querySelector("i");
+            const storedTheme = localStorage.getItem("theme");
+            function setTheme(theme) {
+                if (theme === "dark") {
+                    document.documentElement.setAttribute("data-theme", "dark");
+                    icon.classList.replace("fa-moon", "fa-sun");
+                } else {
+                    document.documentElement.removeAttribute("data-theme");
+                    icon.classList.replace("fa-sun", "fa-moon");
+                }
+            }
+            if (storedTheme) setTheme(storedTheme);
+            else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme("dark");
+            toggleBtn.addEventListener("click", () => {
+                const current = document.documentElement.getAttribute("data-theme");
+                setTheme(current === "dark" ? "light" : "dark");
+                localStorage.setItem("theme", document.documentElement.getAttribute("data-theme") || "light");
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            let moduleNum = parseInt(params.get("module")) || 1;
+            if (moduleNum < 1 || moduleNum > 9) moduleNum = 1;
+
+            const moduleList = document.getElementById("moduleList");
+            
+            for (let i = 1; i <= 9; i++) {
+                const li = document.createElement("li");
+                const a = document.createElement("a");
+                a.href = `?module=${i}`;
+                a.textContent = `${i}. ${modulesData[i].title}`;
+                if (i === moduleNum) a.classList.add("active");
+                li.appendChild(a);
+                moduleList.appendChild(li);
+            }
+
+            const data = modulesData[moduleNum];
+            if (!data) {
+                document.getElementById("moduleNotes").innerHTML = "<p>Module data not found.</p>";
+                return;
+            }
+
+            fetch(`notes/module${moduleNum}-notes.html`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Notes not found");
+                    return response.text();
+                })
+                .then(html => {
+                    const notesDiv = document.getElementById("moduleNotes");
+                    notesDiv.innerHTML = html;
+                    const h2 = document.createElement("h2");
+                    h2.textContent = `Module ${moduleNum}: ${data.title}`;
+                    notesDiv.insertBefore(h2, notesDiv.firstChild);
+
+                    const headings = notesDiv.querySelectorAll("h3");
+                    if (headings.length > 0) {
+                        const tocDiv = document.createElement("div");
+                        tocDiv.id = "miniToc";
+                        tocDiv.innerHTML = "<h3>📑 On this page</h3><ul></ul>";
+                        const tocList = tocDiv.querySelector("ul");
+                        headings.forEach((h, i) => {
+                            const id = `note-h${i}`;
+                            h.id = id;
+                            const li = document.createElement("li");
+                            const a = document.createElement("a");
+                            a.href = `#${id}`;
+                            a.textContent = h.textContent;
+                            li.appendChild(a);
+                            tocList.appendChild(li);
+                        });
+                        notesDiv.insertBefore(tocDiv, notesDiv.firstChild.nextSibling);
+                    }
+                })
+                .catch(() => {
+                    document.getElementById("moduleNotes").innerHTML = "<p>Sorry, the lecture notes for this module are not yet available.</p>";
+                })
+                .finally(() => {
+                    new QuizEngine("quizEngine", data.mcq);
+                    new CodePredictionEngine("codeEngine", data.codePrediction);
+                    new FillBlankEngine("fillBlankEngine", data.fillInBlank);
+                });
+        })();
+    </script>
+</body>
+
+</html>

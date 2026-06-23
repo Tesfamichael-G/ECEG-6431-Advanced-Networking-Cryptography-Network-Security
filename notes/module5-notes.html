@@ -1,0 +1,162 @@
+<h3>Why Message Authentication Matters</h3>
+<p>
+    While confidentiality protects data from unauthorised disclosure, it does not guard against
+    <strong>tampering</strong>
+    or <strong>impersonation</strong>. <strong>Message authentication</strong> provides assurance that a message comes
+    from the alleged source (<strong>data origin authentication</strong>) and has not been altered in transit
+    (<strong>integrity</strong>). In many security protocols, authentication is even more critical than encryption.
+</p>
+
+<h3>Authentication Requirements and Functions</h3>
+<p>A secure authentication mechanism must satisfy these requirements:</p>
+<ul>
+    <li><strong>Verification</strong> – the recipient can confirm the sender’s identity and message integrity.</li>
+    <li><strong>Non‑forgeability</strong> – an attacker cannot construct a valid authentication tag for a new message.
+    </li>
+    <li><strong>Non‑repudiation (optional)</strong> – the sender cannot deny having sent the message (requires
+        asymmetric techniques).</li>
+    <li><strong>Timeliness</strong> – the message is fresh and not a replay of an earlier transmission.</li>
+</ul>
+<p>
+    The three main classes of authentication functions are:
+    <strong>message encryption</strong> (the ciphertext itself serves as authenticator),
+    <strong>message authentication codes (MACs)</strong>, and
+    <strong>hash functions</strong> (often combined with keys or digital signatures).
+</p>
+
+<h3>Message Authentication Code (MAC)</h3>
+<p>
+    A <strong>MAC</strong> is a short, fixed‑size tag generated from a message and a <strong>secret key</strong>.
+    It is sent alongside the message. The receiver, who shares the same key, recomputes the MAC and compares it
+    with the received tag. If they match, the message is authentic and unaltered.
+</p>
+<pre><code>MAC = C(K, M)       // where C is the MAC algorithm, K the secret key, M the message</code></pre>
+<p>
+    Unlike a digital signature, a MAC does <strong>not</strong> provide non‑repudiation because both parties possess
+    the same key. However, MACs are faster and use smaller keys, making them ideal for securing communication
+    between two trusted entities (e.g., in IPsec or TLS record layer).
+</p>
+
+<h3>Cryptographic Hash Functions</h3>
+<p>
+    A <strong>hash function</strong> maps an arbitrary‑length input to a fixed‑length output, called the
+    <strong>hash value</strong> or <strong>message digest</strong>. Cryptographic hash functions must satisfy
+    three core security properties:
+</p>
+<ul>
+    <li><strong>Pre‑image resistance (one‑way)</strong> – given h = H(x), it is infeasible to find any x’ such that
+        H(x’) = h.</li>
+    <li><strong>Second pre‑image resistance</strong> – given x, it is infeasible to find x’ ≠ x such that H(x’) = H(x).
+    </li>
+    <li><strong>Collision resistance</strong> – it is infeasible to find any pair x ≠ y such that H(x) = H(y).</li>
+</ul>
+<p>
+    Collision resistance implies second pre‑image resistance but is the hardest to achieve. The
+    <strong>birthday paradox</strong> means a collision can be found in about 2<sup>n/2</sup> operations for an
+    n‑bit hash; thus modern hashes use at least 256‑bit outputs.
+</p>
+
+<div class="callout">
+    <strong>💡 Hash functions are the workhorses of cryptography:</strong> they are used for digital signatures
+    (by hashing the message first), password storage, integrity checks, blockchain consensus, and as building
+    blocks for MACs and key derivation functions.
+</div>
+
+<h3>Security of Hash Functions and MACs</h3>
+<p>
+    <strong>Hash functions</strong> face attacks such as <strong>brute‑force collision search</strong> (birthday
+    attack),
+    <strong>differential cryptanalysis</strong>, and <strong>length‑extension attacks</strong> (applicable to
+    Merkle–Damgård constructions like MD5, SHA‑1, SHA‑256). SHA‑3 was designed to resist length‑extension by using
+    a sponge construction.
+</p>
+<p>
+    <strong>MAC security</strong> relies on both the underlying cryptographic primitive and the construction method.
+    A secure MAC must resist:
+</p>
+<ul>
+    <li><strong>Existential forgery under chosen‑message attack (EU‑CMA)</strong> – even after querying many
+        message‑MAC pairs, an attacker cannot forge a valid MAC for a new message.</li>
+    <li><strong>Key recovery attacks</strong> – it should be infeasible to extract the secret key.</li>
+</ul>
+
+<h3>Important Hash and MAC Algorithms</h3>
+
+<h4>MD5 (Message Digest 5)</h4>
+<p>
+    Produces a 128‑bit hash. Once widely used, it is now <strong>cryptographically broken</strong> – collisions can
+    be found in seconds on commodity hardware. <strong>Never use MD5 for security‑critical applications.</strong>
+</p>
+
+<h4>SHA Family (Secure Hash Algorithm)</h4>
+<ul>
+    <li><strong>SHA‑1</strong> – 160‑bit output. Collisions found (SHAttered attack, 2017). Deprecated.</li>
+    <li><strong>SHA‑2</strong> – includes SHA‑224, SHA‑256, SHA‑384, SHA‑512. No known practical attacks.
+        SHA‑256 is the current gold standard for many protocols (TLS, Bitcoin).</li>
+    <li><strong>SHA‑3</strong> – Standardised in 2015. Based on the Keccak sponge construction. Complements SHA‑2
+        rather than replacing it; offers additional resistance against certain structural attacks.</li>
+</ul>
+
+<h4>HMAC (Hash‑based Message Authentication Code)</h4>
+<p>
+    HMAC constructs a secure MAC from an iterative hash function like SHA‑256. The standard is defined in
+    <strong>RFC 2104</strong>. The construction is:
+</p>
+<pre><code>HMAC(K, m) = H((K’ ⊕ opad) || H((K’ ⊕ ipad) || m))</code></pre>
+<p>
+    where <em>ipad</em> and <em>opad</em> are fixed padding constants, and <em>K’</em> is the key padded to the block
+    size.
+    HMAC is provably secure under reasonable assumptions about the underlying hash function.
+</p>
+
+<h4>CMAC and GMAC</h4>
+<ul>
+    <li><strong>CMAC (Cipher‑based MAC)</strong> – based on symmetric block ciphers (e.g., AES). Useful in
+        environments where only a cipher primitive is available.</li>
+    <li><strong>GMAC (Galois Message Authentication Code)</strong> – associated with AES‑GCM authenticated
+        encryption, providing both confidentiality and integrity.</li>
+</ul>
+
+<h4>Password Hashing</h4>
+<p>
+    Storing passwords requires special hash functions that are <strong>slow</strong> and
+    <strong>salted</strong> to resist brute‑force and rainbow‑table attacks. Notable algorithms:
+    <strong>bcrypt</strong>, <strong>scrypt</strong>, and <strong>Argon2</strong> (the winner of the
+    Password Hashing Competition).
+</p>
+
+<h3>Practical Example (HMAC‑SHA256)</h3>
+<pre><code>import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+
+public class HMACDemo {
+    public static void main(String[] args) throws Exception {
+        String secret = "my-secret-key";
+        String message = "important data";
+
+        Mac mac = Mac.getInstance("HmacSHA256");
+        SecretKeySpec keySpec = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+        mac.init(keySpec);
+        byte[] tag = mac.doFinal(message.getBytes());
+
+        System.out.println(Base64.getEncoder().encodeToString(tag));
+    }
+}</code></pre>
+
+<h3>Common Pitfalls and Best Practices</h3>
+<ul>
+    <li><strong>Never roll your own crypto</strong> – use standard, well‑vetted libraries.</li>
+    <li><strong>Do not use MD5 or SHA‑1 for security</strong>.</li>
+    <li><strong>Always use a salt</strong> when hashing passwords or keys; it makes pre‑computed tables infeasible.</li>
+    <li><strong>Use HMAC, not simple hash concatenation</strong> – constructions like <code>H(key || message)</code>
+        are vulnerable to length‑extension attacks.</li>
+    <li><strong>Use an appropriate tag size</strong> – truncating an HMAC to 128 bits is usually safe; don't use too
+        short a tag.</li>
+</ul>
+
+<p>
+    Message authentication and hash functions are the foundation of integrity and authentication in digital
+    communications. In the next module, we'll see how hashes are combined with public‑key cryptography to
+    create <strong>digital signatures</strong> – the digital counterpart of a handwritten signature.
+</p>

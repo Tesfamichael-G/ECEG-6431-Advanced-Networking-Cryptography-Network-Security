@@ -1,0 +1,158 @@
+<h3>From Handwritten to Digital Signatures</h3>
+<p>
+    A <strong>digital signature</strong> is a cryptographic mechanism that provides the digital equivalent of a
+    handwritten signature – but far stronger. It assures the recipient of the <strong>authenticity</strong> of the
+    sender, the <strong>integrity</strong> of the message, and provides <strong>non‑repudiation</strong> (the signer
+    cannot later deny having signed). Digital signatures are a cornerstone of secure electronic commerce,
+    software distribution, and digital identity.
+</p>
+
+<h3>How Digital Signatures Work</h3>
+<p>
+    Digital signatures use <strong>asymmetric cryptography</strong>. The signer uses their <strong>private key</strong>
+    to create the signature; anyone with access to the signer's <strong>public key</strong> can verify it.
+    The general process involves hashing the message first, then encrypting the hash with the private key.
+</p>
+<pre><code>// Signing
+hash = H(message)
+signature = Sign<sub>privateKey</sub>(hash)
+
+// Verification
+hash1 = H(message)
+hash2 = Verify<sub>publicKey</sub>(signature)
+if (hash1 == hash2) → valid</code></pre>
+
+<h3>RSA Digital Signature Scheme</h3>
+<p>
+    RSA can be used directly for signing by reversing the roles of encryption and decryption:
+    the signature <em>s</em> is computed as <em>s ≡ m<sup>d</sup> mod n</em>, where <em>d</em> is the private key.
+    However, raw RSA signing is insecure. The standardised scheme is <strong>RSA‑PSS</strong> (Probabilistic
+    Signature Scheme), which adds random padding and is provably secure in the random oracle model.
+</p>
+<ul>
+    <li><strong>RSASSA‑PKCS1‑v1_5</strong> – older scheme, still widely used, but not as robust as PSS.</li>
+    <li><strong>RSASSA‑PSS</strong> – recommended for new applications; includes a random salt and mask generation.</li>
+</ul>
+
+<h3>Digital Signature Algorithm (DSA)</h3>
+<p>
+    DSA is a US federal standard (FIPS 186) based on the <strong>discrete logarithm problem</strong>. It generates
+    two values, <em>r</em> and <em>s</em>, that together form the signature. DSA requires a per‑message random nonce
+    (<em>k</em>), and <strong>re‑using the same nonce with different messages immediately reveals the private
+        key!</strong>
+</p>
+<pre><code>// DSA parameters: p, q, g (public); x (private); y = g<sup>x</sup> mod p (public)
+
+Sign:
+  Choose random k (1 < k < q)
+  r = (g<sup>k</sup> mod p) mod q
+  s = k<sup>-1</sup>(H(m) + x·r) mod q
+  Signature = (r, s)
+
+Verify:
+  w = s<sup>-1</sup> mod q
+  u1 = H(m)·w mod q
+  u2 = r·w mod q
+  v = (g<sup>u1</sup>·y<sup>u2</sup> mod p) mod q
+  Valid if v == r</code></pre>
+
+<h3>Elliptic Curve Digital Signature Algorithm (ECDSA)</h3>
+<p>
+    ECDSA is the elliptic curve analogue of DSA, offering the same functionality with smaller keys and faster
+    operations. It is the basis of signature verification in Bitcoin, Ethereum, and modern TLS (with curves
+    like secp256r1, Curve25519). The core idea is to replace modular exponentiation with point multiplication
+    on an elliptic curve.
+</p>
+
+<h3>Authentication Protocols</h3>
+<p>
+    An <strong>authentication protocol</strong> enables one entity (the claimant) to prove its identity to
+    another (the verifier). These protocols must resist <strong>replay attacks</strong>,
+    <strong>impersonation</strong>, and <strong>man‑in‑the‑middle</strong> attacks.
+</p>
+
+<h4>Challenge‑Response Protocols</h4>
+<p>
+    The verifier sends a random <strong>nonce</strong> (number used once) to the claimant. The claimant
+    processes the nonce (e.g., encrypts it with a shared key or signs it with a private key) and returns
+    the result. Because the nonce is fresh and unpredictable, the response cannot be replayed.
+</p>
+<pre><code>Verifier → Claimant: N (random nonce)
+Claimant → Verifier: E<sub>K</sub>(N)   // or Sign<sub>private</sub>(N)
+Verifier checks if decrypted N matches original</code></pre>
+
+<h4>Kerberos</h4>
+<p>
+    Kerberos is a network authentication protocol designed at MIT. It uses a trusted third party, the
+    <strong>Key Distribution Center (KDC)</strong>, to issue <strong>tickets</strong>. A ticket contains a
+    session key encrypted for a specific service, allowing mutual authentication and session encryption.
+</p>
+<ul>
+    <li><strong>Authentication Server (AS)</strong> – authenticates the user and issues a Ticket‑Granting Ticket (TGT).
+    </li>
+    <li><strong>Ticket‑Granting Server (TGS)</strong> – exchanges the TGT for a service ticket.</li>
+    <li>Uses symmetric cryptography (DES, later RC4‑HMAC, now AES). Modern Kerberos also supports PKINIT for
+        public‑key initial authentication.</li>
+</ul>
+
+<h4>X.509 Authentication Service</h4>
+<p>
+    X.509 defines a framework for authentication using <strong>public‑key certificates</strong> and a
+    hierarchical <strong>Certificate Authority (CA)</strong> system. Each certificate binds a public key to
+    a distinguished name. The certificate is signed by a CA, forming a chain of trust up to a self‑signed
+    root certificate. X.509 is the backbone of TLS/SSL, S/MIME, and IPsec.
+</p>
+<ul>
+    <li><strong>One‑way authentication</strong> – only the server (or one party) proves its identity.</li>
+    <li><strong>Two‑way (mutual) authentication</strong> – both parties present certificates.</li>
+    <li><strong>Three‑way authentication</strong> – adds a random number exchange for additional assurance.</li>
+</ul>
+
+<h3>Digital Signature Standards</h3>
+<p>
+    The <strong>Digital Signature Standard (DSS)</strong> (FIPS 186) originally specified DSA and later
+    incorporated RSA and ECDSA. Key requirements include:
+</p>
+<ul>
+    <li>Approved hash functions (SHA‑2 family).</li>
+    <li>Approved elliptic curves (NIST P‑256, P‑384, P‑521; Edwards curves like Ed25519 are also widely adopted).</li>
+    <li>Key sizes: at least 2048 bits for RSA, 256 bits for ECC.</li>
+</ul>
+
+<h3>Practical Example (RSA‑PSS in Java)</h3>
+<pre><code>import java.security.*;
+
+public class RSAPSSExample {
+    public static void main(String[] args) throws Exception {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
+        KeyPair pair = keyGen.generateKeyPair();
+
+        Signature signer = Signature.getInstance("RSASSA-PSS");
+        signer.initSign(pair.getPrivate());
+        signer.update("message".getBytes());
+        byte[] signature = signer.sign();
+
+        Signature verifier = Signature.getInstance("RSASSA-PSS");
+        verifier.initVerify(pair.getPublic());
+        verifier.update("message".getBytes());
+        boolean valid = verifier.verify(signature);
+        System.out.println("Valid: " + valid);
+    }
+}</code></pre>
+
+<h3>Best Practices and Pitfalls</h3>
+<ul>
+    <li><strong>Use a secure random nonce</strong> for DSA/ECDSA – never reuse, never predict.</li>
+    <li><strong>Always hash the message before signing</strong>; sign the hash, not the raw message.</li>
+    <li><strong>Validate certificate chains completely</strong> – check expiration, revocation, and correct CA
+        signature.</li>
+    <li><strong>Protect private keys</strong> with hardware security modules (HSMs) or trusted execution environments.
+    </li>
+    <li><strong>Avoid deprecated algorithms</strong>: MD5, SHA‑1, RSA with PKCS#1 v1.5 (prefer PSS).</li>
+</ul>
+
+<p>
+    Digital signatures and authentication protocols form the trust backbone of the Internet. In the next module,
+    we'll examine how these building blocks are combined to secure networks at scale.
+</p>

@@ -1,0 +1,142 @@
+<h3>Building Practical Networking Skills</h3>
+<p>
+    Effective network administration requires a solid grasp of <strong>IP addressing</strong>,
+    <strong>diagnostic tools</strong>, and the ability to manage and secure network resources.
+    This module develops those essential skills and introduces the principles of network management.
+</p>
+
+<h3>IP Addressing – A Deeper Look</h3>
+<p>
+    An <strong>IPv4 address</strong> is a 32‑bit number, usually written in dotted‑decimal notation
+    (e.g., <code>192.168.1.10</code>). Each address is split into a <strong>network</strong> portion
+    and a <strong>host</strong> portion, defined by the <strong>subnet mask</strong>.
+</p>
+<ul>
+    <li>
+        <strong>Classful addressing</strong> (obsolete) – Classes A, B, C with fixed masks
+        (<code>/8</code>, <code>/16</code>, <code>/24</code>).
+    </li>
+    <li>
+        <strong>Classless Inter‑Domain Routing (CIDR)</strong> – uses a variable‑length subnet mask,
+        e.g., <code>10.0.0.0/16</code>. Provides efficient allocation and route aggregation.
+    </li>
+    <li>
+        <strong>Private addresses</strong> – ranges reserved for internal use
+        (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>).
+    </li>
+    <li>
+        <strong>Subnetting</strong> – dividing a large network into smaller sub‑networks to reduce
+        broadcast domains and improve security.
+    </li>
+</ul>
+<p>
+    <strong>IPv6</strong> uses 128‑bit addresses (written in hexadecimal) to overcome address
+    exhaustion. Example: <code>2001:0db8:85a3::8a2e:0370:7334</code>.
+</p>
+
+<div class="callout">
+    <strong>💡 Key Formula:</strong> For a subnet with prefix length <code>n</code>, the number of
+    usable host addresses = <code>2<sup>(32‑n)</sup> – 2</code> (subtracting network and broadcast).
+</div>
+
+<h3>Essential Troubleshooting Tools</h3>
+<p>
+    A network engineer must diagnose connectivity and performance issues. Common command‑line tools include:
+</p>
+<ul>
+    <li><strong>ping</strong> – sends ICMP echo requests to verify reachability and measure round‑trip time.</li>
+    <li><strong>traceroute / tracert</strong> – lists the routers (hops) along the path to a destination.</li>
+    <li><strong>nslookup / dig</strong> – queries DNS servers to resolve domain names to IP addresses.</li>
+    <li><strong>netstat</strong> – displays active connections, listening ports, and routing tables.</li>
+    <li><strong>ipconfig / ifconfig</strong> – shows and configures network interface parameters.</li>
+    <li><strong>Wireshark / tcpdump</strong> – captures and analyzes packets at a detailed level.</li>
+</ul>
+<p>Understanding the output of these tools is the first step toward isolating and fixing network faults.</p>
+
+<h3>Uniform Resource Locator (URL)</h3>
+<p>
+    A URL uniquely identifies a resource on the Internet. Its general form is:<br>
+    <code>scheme://host[:port]/path?query#fragment</code>
+</p>
+<ul>
+    <li><strong>scheme</strong> – protocol (http, https, ftp, etc.).</li>
+    <li><strong>host</strong> – domain name or IP address.</li>
+    <li><strong>port</strong> – optional; defaults to protocol‑specific port (e.g., 80 for HTTP).</li>
+    <li><strong>path</strong> – resource location on the server.</li>
+    <li><strong>query</strong> – key‑value pairs sent to the server (e.g., <code>?id=5</code>).</li>
+    <li><strong>fragment</strong> – optional reference to a section within the resource.</li>
+</ul>
+
+<h3>Domain Names and Name Services</h3>
+<p>
+    The <strong>Domain Name System (DNS)</strong> translates human‑readable names into IP addresses.
+    The hierarchy consists of root servers, top‑level domains (TLDs, e.g., .com, .org, .edu),
+    authoritative name servers, and recursive resolvers. Common record types:
+</p>
+<ul>
+    <li><strong>A</strong> – maps a name to an IPv4 address.</li>
+    <li><strong>AAAA</strong> – maps to an IPv6 address.</li>
+    <li><strong>CNAME</strong> – canonical name (alias).</li>
+    <li><strong>MX</strong> – mail exchanger.</li>
+    <li><strong>NS</strong> – authoritative name server for the domain.</li>
+</ul>
+<p>DNS attacks (cache poisoning, DDoS against root servers) are a major security concern.</p>
+
+<h3>Use of Passwords and Access Control Mechanisms</h3>
+<p>
+    Network devices and services must enforce <strong>authentication</strong> (who you are),
+    <strong>authorization</strong> (what you can do), and <strong>accounting</strong> (what you did).
+    Common mechanisms:
+</p>
+<ul>
+    <li><strong>Passwords</strong> – stored securely using salted hashes; enforce complexity and expiration policies.
+    </li>
+    <li><strong>Two‑factor authentication (2FA)</strong> – adds a second factor (token, biometric) for stronger
+        protection.</li>
+    <li><strong>RADIUS / TACACS+</strong> – centralized AAA protocols for remote access.</li>
+    <li><strong>Access Control Lists (ACLs)</strong> – permit or deny traffic based on IP, port, or protocol.</li>
+    <li><strong>Role‑Based Access Control (RBAC)</strong> – grants permissions according to a user’s role.</li>
+</ul>
+
+<h3>Issues of Internet Service Providers (ISPs)</h3>
+<p>
+    ISPs manage vast network infrastructures. Key concerns include:
+    <strong>bandwidth provisioning</strong>, <strong>routing policy</strong>,
+    <strong>peering agreements</strong>, <strong>quality of service (QoS)</strong>,
+    <strong>service level agreements (SLAs)</strong>, and
+    <strong>compliance with legal and regulatory frameworks</strong>.
+</p>
+
+<h3>Network Management – The FCAPS Model</h3>
+<p>
+    The ISO Telecommunications Management Network model defines five functional areas, known as
+    <strong>FCAPS</strong>:
+</p>
+<ul>
+    <li><strong>Fault Management</strong> – detect, isolate, and correct network faults.</li>
+    <li><strong>Configuration Management</strong> – track and control device settings and changes.</li>
+    <li><strong>Accounting Management</strong> – monitor resource usage for billing and capacity planning.</li>
+    <li><strong>Performance Management</strong> – measure and maintain acceptable service levels (throughput, latency,
+        jitter).</li>
+    <li><strong>Security Management</strong> – protect the network from unauthorized access, attacks, and ensure data
+        integrity.</li>
+</ul>
+
+<h3>Simple Network Management Protocol (SNMP)</h3>
+<p>
+    SNMP is the industry standard for network device monitoring and management. It consists of:
+</p>
+<ul>
+    <li><strong>Manager</strong> – the central system that polls agents and receives notifications.</li>
+    <li><strong>Agent</strong> – software running on managed devices (routers, switches, servers).</li>
+    <li><strong>Management Information Base (MIB)</strong> – a hierarchical database of managed objects (variables).
+    </li>
+</ul>
+<p>Operations include <code>GET</code>, <code>SET</code>, and <code>TRAP</code> (asynchronous notification).
+    SNMPv3 added strong authentication and encryption.</p>
+
+<pre><code># Example: querying a device with snmpget
+snmpget -v3 -u admin -l authPriv -a SHA -A "pass" -x AES -X "encpass" 192.168.1.1 sysUpTime.0</code></pre>
+
+<p>This foundation enables you to manage, troubleshoot, and secure networks effectively, preparing you for the
+    security‑focused modules ahead.</p>

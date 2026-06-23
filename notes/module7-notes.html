@@ -1,0 +1,191 @@
+<h3>Securing the Network: An Integrated View</h3>
+<p>
+    Network security is not a single protocol but a layered collection of technologies that protect
+    communication across different layers of the TCP/IP stack. In this module we examine security at the
+    application layer (email, web), the transport layer, and the network layer – all built on the
+    cryptographic primitives studied in earlier modules.
+</p>
+
+<h3>Authentication Services: Kerberos and X.509</h3>
+
+<h4>Kerberos</h4>
+<p>
+    Kerberos is a network authentication protocol that uses <strong>symmetric key cryptography</strong> and a
+    trusted third party – the <strong>Key Distribution Center (KDC)</strong>. It is designed to provide
+    strong authentication in open, untrusted networks.
+</p>
+<ul>
+    <li><strong>Authentication Server (AS)</strong> – verifies the user’s identity (e.g., via password)
+        and issues a <strong>Ticket‑Granting Ticket (TGT)</strong>.</li>
+    <li><strong>Ticket‑Granting Server (TGS)</strong> – exchanges the TGT for a
+        <strong>service ticket</strong> that the client presents to a specific service.
+    </li>
+    <li>The service ticket contains a <strong>session key</strong> encrypted for the service, enabling
+        mutual authentication and optional message encryption.</li>
+</ul>
+<p>
+    Kerberos version 5 is widely used in enterprise environments (Active Directory) and supports
+    <strong>PKINIT</strong> for initial authentication using public‑key certificates instead of a
+    password.
+</p>
+
+<h4>X.509 Authentication Service</h4>
+<p>
+    X.509 defines the format for <strong>public‑key certificates</strong> and a framework for
+    <strong>certificate validation</strong>. Each certificate contains:
+</p>
+<ul>
+    <li>Subject’s name and public key.</li>
+    <li>Issuer (Certificate Authority) name.</li>
+    <li>Validity period.</li>
+    <li>Digital signature of the CA over the certificate body.</li>
+</ul>
+<p>
+    Certificate validation involves building a chain of trust up to a trusted root CA, checking
+    signatures, expiration, and revocation status via <strong>Certificate Revocation Lists (CRLs)</strong>
+    or the <strong>Online Certificate Status Protocol (OCSP)</strong>.
+</p>
+
+<h3>Electronic Mail Security</h3>
+
+<h4>Pretty Good Privacy (PGP)</h4>
+<p>
+    PGP provides end‑to‑end encryption, authentication, and compression for email. It uses a
+    <strong>hybrid cryptosystem</strong>:
+</p>
+<ul>
+    <li>A random <strong>symmetric session key</strong> encrypts the message body (using AES, IDEA,
+        or CAST5).</li>
+    <li>The session key is encrypted with the recipient’s <strong>RSA or ElGamal public key</strong>.</li>
+    <li>Digital signatures use the sender’s private key over a hash of the message.</li>
+</ul>
+<p>
+    PGP follows a <strong>web of trust</strong> model – users can sign each other’s keys, and trust is
+    built through social verification rather than a central CA. OpenPGP (RFC 4880) is the open standard,
+    implemented by GnuPG.
+</p>
+
+<h4>S/MIME (Secure/Multipurpose Internet Mail Extensions)</h4>
+<p>
+    S/MIME is an IETF standard that adds security to MIME messages (email with attachments). Unlike PGP,
+    S/MIME relies on a <strong>hierarchical PKI</strong> (X.509 certificates). It provides:
+</p>
+<ul>
+    <li><strong>Enveloped data</strong> – symmetric encryption (AES) with a key wrapped in RSA.</li>
+    <li><strong>Signed data</strong> – digital signature (RSA, DSA, ECDSA) over a message hash.</li>
+    <li><strong>Clear‑signed data</strong> – signature only, readable by non‑S/MIME clients.</li>
+</ul>
+<p>
+    S/MIME is the dominant standard in enterprise environments where centralised certificate management is
+    feasible.
+</p>
+
+<h3>IP Security (IPsec)</h3>
+<p>
+    IPsec provides security at the <strong>network layer</strong>, protecting all traffic between two
+    endpoints or networks. It is transparent to applications and transport protocols.
+</p>
+
+<h4>IPsec Architecture</h4>
+<ul>
+    <li><strong>Security Association (SA)</strong> – a unidirectional logical connection specifying the
+        algorithms and keys for traffic. Identified by a triplet (SPI, destination IP, protocol).</li>
+    <li><strong>Security Association Database (SAD)</strong> – stores active SAs.</li>
+    <li><strong>Security Policy Database (SPD)</strong> – defines which traffic is to be protected
+        and how (bypass, discard, or protect).</li>
+</ul>
+
+<h4>IPsec Protocols</h4>
+<ul>
+    <li><strong>Authentication Header (AH)</strong> – provides data integrity and origin authentication
+        but <strong>no encryption</strong>. Protects the entire packet including immutable IP header fields.</li>
+    <li><strong>Encapsulating Security Payload (ESP)</strong> – provides <strong>confidentiality</strong>,
+        and optionally authentication. Encrypts the payload and can also authenticate portions of the
+        packet.</li>
+</ul>
+<p>
+    <strong>Transport mode</strong> – encrypts/authenticates only the IP payload (for end‑to‑end security
+    between hosts). <strong>Tunnel mode</strong> – encapsulates the entire original IP packet and adds a
+    new IP header (used for VPN gateways).
+</p>
+
+<h4>Key Management in IPsec</h4>
+<p>
+    The <strong>Internet Key Exchange (IKEv2)</strong> protocol negotiates SAs and establishes shared keys.
+    IKEv2 uses a Diffie‑Hellman exchange within a secure channel (created via initial IKE_SA_INIT and
+    IKE_AUTH exchanges). It supports mutual authentication via pre‑shared keys, digital signatures, or EAP.
+</p>
+
+<h3>Web Security: SSL/TLS</h3>
+<p>
+    <strong>Transport Layer Security (TLS)</strong>, the successor to SSL, is the most widely used
+    security protocol. It sits above TCP and provides a secure channel for higher‑layer protocols
+    (HTTPS, SMTPS, LDAPS).
+</p>
+
+<h4>TLS Protocol Layers</h4>
+<ul>
+    <li><strong>Handshake Protocol</strong> – negotiates session parameters: protocol version, cipher suite,
+        and authentication. Uses public‑key cryptography to establish a <strong>pre‑master secret</strong>
+        from which symmetric session keys are derived.</li>
+    <li><strong>Record Protocol</strong> – fragments, compresses (optional), applies a MAC, and encrypts
+        data using the agreed‑upon symmetric algorithms (e.g., AES‑GCM, ChaCha20‑Poly1305).</li>
+</ul>
+
+<h4>TLS Handshake Overview (simplified)</h4>
+<ol>
+    <li>Client → Server: ClientHello (supported versions, cipher suites, random nonce).</li>
+    <li>Server → Client: ServerHello (chosen parameters), Certificate, ServerKeyExchange (if needed),
+        ServerHelloDone.</li>
+    <li>Client → Server: ClientKeyExchange (encrypted pre‑master secret), ChangeCipherSpec,
+        Finished (first encrypted message).</li>
+    <li>Server → Client: ChangeCipherSpec, Finished.</li>
+</ol>
+<p>
+    After the handshake, all traffic is encrypted and authenticated with symmetric keys derived from the
+    pre‑master secret.
+</p>
+
+<h4>Security Requirements for Web Transactions</h4>
+<ul>
+    <li><strong>Confidentiality</strong> – encrypted channel.</li>
+    <li><strong>Authentication</strong> – server (always), optionally client.</li>
+    <li><strong>Integrity</strong> – MAC prevents tampering.</li>
+    <li><strong>Forward secrecy</strong> – even if the server’s long‑term key is later compromised,
+        past sessions remain secure (achieved by ephemeral Diffie‑Hellman key exchange).</li>
+</ul>
+
+<div class="callout">
+    <strong>💡 TLS 1.3</strong> significantly simplifies the handshake (one round‑trip), mandates forward
+    secrecy, removes legacy algorithms (RSA key transport, static DH), and encrypts most of the handshake.
+</div>
+
+<h3>Practical Example (TLS Connection in Java)</h3>
+<pre><code>import javax.net.ssl.*;
+import java.io.*;
+
+public class TLSDemo {
+    public static void main(String[] args) throws Exception {
+        SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+        SSLSocket socket = (SSLSocket) factory.createSocket("example.com", 443);
+        socket.startHandshake();
+
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        out.println("GET / HTTP/1.1\r\nHost: example.com\r\n\r\n");
+        String line;
+        while ((line = in.readLine()) != null) {
+            System.out.println(line);
+        }
+        socket.close();
+    }
+}</code></pre>
+
+<h3>Summary</h3>
+<p>
+    This module covered the major security protocols at the application, transport, and network layers:
+    Kerberos and X.509 for authentication, PGP and S/MIME for email, IPsec for network‑layer VPNs, and
+    TLS for web security. Together, they form the backbone of a secure Internet. The next module will
+    address the unique challenges of wireless environments.
+</p>

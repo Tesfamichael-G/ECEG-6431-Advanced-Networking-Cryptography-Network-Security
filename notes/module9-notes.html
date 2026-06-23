@@ -1,0 +1,193 @@
+<h3>System Security: The Big Picture</h3>
+<p>
+    Even with strong cryptographic protocols, a system can be compromised through <strong>software
+        vulnerabilities</strong>,
+    <strong>human factors</strong>, or <strong>weak perimeter defences</strong>. This module addresses three critical
+    areas of system‑level security: understanding <strong>intruders</strong>, defending against
+    <strong>malicious software (malware)</strong>, and deploying <strong>firewalls</strong> to control network access.
+</p>
+
+<h3>Intruders</h3>
+<p>
+    An <strong>intruder</strong> is an individual or automated entity that attempts to gain unauthorised access to a
+    system
+    or network. Intruders are typically classified into three categories:
+</p>
+<ul>
+    <li><strong>Masquerader</strong> – an outsider who pretends to be an authorised user (e.g., using stolen
+        credentials).</li>
+    <li><strong>Misfeasor</strong> – a legitimate user who accesses unauthorised data or misuses privileges.</li>
+    <li><strong>Clandestine user</strong> – an individual who seizes supervisory control to evade audit and access
+        controls.</li>
+</ul>
+<p>
+    <strong>Intrusion Detection Systems (IDS)</strong> are designed to detect such activities. Two main approaches
+    exist:
+</p>
+<ul>
+    <li><strong>Signature‑based detection</strong> – matches known attack patterns (signatures) against observed events.
+        Effective for known threats, but cannot detect new attacks.</li>
+    <li><strong>Anomaly‑based detection</strong> – builds a profile of normal behaviour and flags deviations. Can detect
+        novel attacks but may generate false positives.</li>
+</ul>
+<p>
+    <strong>Intrusion Prevention Systems (IPS)</strong> extend IDS by automatically blocking detected threats.
+    <strong>Honeypots</strong> are decoy systems that lure attackers, allowing security teams to study their
+    techniques without exposing real assets.
+</p>
+
+<h3>Malicious Software (Malware)</h3>
+<p>
+    <strong>Malware</strong> is any software intentionally designed to cause damage, disrupt operations, or gain
+    unauthorised access. Common categories include:
+</p>
+
+<h4>Viruses</h4>
+<p>
+    A virus attaches itself to a legitimate program or file and replicates when that program is executed.
+    Types include <strong>boot sector viruses</strong>, <strong>file infectors</strong>, <strong>macro viruses</strong>,
+    and <strong>polymorphic viruses</strong> that change their code signature to evade detection.
+</p>
+
+<h4>Worms</h4>
+<p>
+    Unlike viruses, worms spread <strong>without user interaction</strong> by exploiting network vulnerabilities.
+    Famous examples: Morris Worm (1988), Code Red, SQL Slammer.
+</p>
+
+<h4>Trojan Horses</h4>
+<p>
+    A trojan disguises itself as useful software (e.g., a game, utility) but delivers a malicious payload.
+    Trojans often create backdoors, download additional malware, or steal data.
+</p>
+
+<h4>Ransomware</h4>
+<p>
+    Ransomware encrypts the victim’s files and demands a ransom (often in cryptocurrency) for the decryption key.
+    Recent high‑profile variants include WannaCry, Ryuk, and LockBit. Protection involves regular backups and
+    robust endpoint security.
+</p>
+
+<h4>Spyware and Adware</h4>
+<ul>
+    <li><strong>Spyware</strong> – covertly gathers user information (keystrokes, browsing habits) and transmits it
+        to a third party.</li>
+    <li><strong>Adware</strong> – aggressively displays advertisements; may be bundled with free software.</li>
+</ul>
+
+<h4>Rootkits</h4>
+<p>
+    A rootkit provides an attacker with persistent, undetectable presence by modifying the operating system or
+    firmware. Rootkits are extremely difficult to remove; often the safest remedy is a complete system rebuild.
+</p>
+
+<h4>Botnets</h4>
+<p>
+    A network of compromised devices (bots) controlled by a command‑and‑control (C&C) server. Botnets are used
+    for distributed denial‑of‑service (DDoS) attacks, spam campaigns, and credential theft. They can consist of
+    millions of devices, including IoT gadgets.
+</p>
+
+<div class="callout">
+    <strong>⚠️ Defence in Depth:</strong> No single solution stops all malware. Effective defence combines
+    antivirus, endpoint detection and response (EDR), firewalls, intrusion prevention, user education, and
+    regular patching.
+</div>
+
+<h3>Firewalls</h3>
+<p>
+    A <strong>firewall</strong> is a network security device (hardware, software, or virtual) that monitors and
+    controls incoming and outgoing traffic based on a predefined security policy. It forms the first line of
+    defence between a trusted internal network and an untrusted external network.
+</p>
+
+<h4>Types of Firewalls</h4>
+<ul>
+    <li><strong>Packet Filtering Firewall</strong> – inspects packets based on source/destination IP, port, and
+        protocol. Fast but lacks context; vulnerable to IP spoofing.</li>
+    <li><strong>Stateful Inspection Firewall</strong> – tracks the state of active connections and makes decisions
+        based on context. More secure than simple packet filters.</li>
+    <li><strong>Application‑Level Gateway (Proxy Firewall)</strong> – acts as an intermediary for specific
+        applications (HTTP, FTP). Can inspect payload content but introduces latency.</li>
+    <li><strong>Circuit‑Level Gateway</strong> – validates TCP/UDP sessions without inspecting the data itself;
+        often used alongside application proxies.</li>
+    <li><strong>Next‑Generation Firewall (NGFW)</strong> – combines stateful inspection with intrusion prevention,
+        application awareness, and deep packet inspection.</li>
+</ul>
+
+<h4>Firewall Architectures</h4>
+<ul>
+    <li><strong>Dual‑homed host</strong> – a single host with two network interfaces, one connected to the internal
+        network and one to the external network. Traffic must pass through the host, where firewall rules are enforced.
+    </li>
+    <li><strong>Screened host</strong> – a packet‑filtering router sits in front of a bastion host (hardened proxy
+        server).</li>
+    <li><strong>Screened subnet (DMZ)</strong> – a <strong>Demilitarized Zone</strong> isolates publicly accessible
+        servers (web, mail) from the internal network. Two firewalls or a multi‑homed firewall separate the internal
+        network, the DMZ, and the Internet.</li>
+</ul>
+
+<h4>Firewall Policy</h4>
+<p>
+    A firewall's behaviour is governed by a set of rules. The default stance may be:
+</p>
+<ul>
+    <li><strong>Default‑deny</strong> – block all traffic unless explicitly permitted. Most secure, but may disrupt
+        legitimate services if not carefully configured.</li>
+    <li><strong>Default‑allow</strong> – permit all traffic unless specifically denied. Less secure, sometimes used
+        in legacy environments.</li>
+</ul>
+
+<h4>Beyond Firewalls: Defense in Depth</h4>
+<p>
+    Modern system security layers multiple defences:
+</p>
+<ul>
+    <li><strong>Network segmentation</strong> – dividing a network into smaller segments limits an attacker’s
+        lateral movement.</li>
+    <li><strong>Zero Trust Architecture</strong> – no entity (inside or outside) is trusted by default; all access
+        requires continuous verification.</li>
+    <li><strong>Endpoint Protection</strong> – antivirus, EDR, application whitelisting.</li>
+    <li><strong>Security Information and Event Management (SIEM)</strong> – aggregates logs and alerts for
+        centralised analysis.</li>
+    <li><strong>Regular patching</strong> – closing known vulnerabilities remains one of the most effective
+        defences.</li>
+</ul>
+
+<h3>Physical Security</h3>
+<p>
+    No amount of cryptography or firewalls will protect a system if an attacker can physically access the
+    hardware. Physical security measures include:
+</p>
+<ul>
+    <li>Access controls (locks, biometrics, security guards).</li>
+    <li>Video surveillance and intrusion alarms.</li>
+    <li>Hardware‑based encryption (self‑encrypting drives).</li>
+    <li>Secure disposal of storage media (degaussing, shredding).</li>
+</ul>
+
+<h3>Social Engineering</h3>
+<p>
+    The weakest link in any security system is often the human. Social engineering attacks manipulate people into
+    divulging confidential information or performing actions that compromise security. Common techniques:
+</p>
+<ul>
+    <li><strong>Phishing</strong> – fraudulent emails or websites that impersonate trusted entities.</li>
+    <li><strong>Pretexting</strong> – creating a fabricated scenario to obtain information (e.g., fake tech support).
+    </li>
+    <li><strong>Baiting</strong> – offering something enticing (free music, USB drives) that contains malware.</li>
+    <li><strong>Tailgating</strong> – following an authorised person into a restricted area without proper
+        credentials.</li>
+</ul>
+<p>
+    Mitigation requires continuous <strong>security awareness training</strong> and a culture that encourages
+    reporting suspicious activity.
+</p>
+
+<h3>Summary</h3>
+<p>
+    Securing a system requires a holistic approach: detecting and deterring intruders, defending against a
+    diverse range of malware, deploying robust firewall architectures, and never forgetting the human element.
+    With the knowledge from this module and the entire course, you now have the foundation to design, evaluate,
+    and maintain secure networked systems.
+</p>

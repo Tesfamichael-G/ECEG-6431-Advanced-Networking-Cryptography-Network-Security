@@ -1,0 +1,170 @@
+<h3>The Need for Public Key Cryptography</h3>
+<p>
+    Symmetric encryption requires both parties to share a secret key beforehand – a major challenge in large networks.
+    <strong>Public key cryptography</strong> (asymmetric cryptography) solves this by using a <strong>key pair</strong>:
+    a <strong>public key</strong> (known to everyone) and a <strong>private key</strong> (kept secret). The two keys are
+    mathematically related, but it is computationally infeasible to derive the private key from the public key.
+</p>
+<p>
+    This enables <strong>confidentiality</strong> (encrypt with public key, decrypt with private key),
+    <strong>authentication</strong> and <strong>non‑repudiation</strong> via digital signatures (sign with private key,
+    verify with public key), and <strong>key exchange</strong> (agree on a shared secret without prior secrets).
+</p>
+
+<h3>RSA (Rivest–Shamir–Adleman) Cryptography</h3>
+<p>
+    RSA is the most widely used public‑key algorithm, introduced in 1977. Its security is based on the
+    <strong>difficulty of factoring large integers</strong>.
+</p>
+
+<h4>Key Generation</h4>
+<ol>
+    <li>Choose two large, distinct primes <em>p</em> and <em>q</em> (typically 1024–2048 bits each).</li>
+    <li>Compute the modulus: <strong>n = p · q</strong>.</li>
+    <li>Compute Euler’s totient: <strong>φ(n) = (p–1)(q–1)</strong>.</li>
+    <li>Choose a public exponent <strong>e</strong> such that 1 &lt; e &lt; φ(n) and <strong>gcd(e, φ(n)) = 1</strong>.
+        Common choices are 65537 (0x10001) for efficiency.</li>
+    <li>Compute the private exponent <strong>d</strong> as the modular inverse of <em>e</em> modulo φ(n):
+        <strong>d ≡ e<sup>–1</sup> (mod φ(n))</strong>. This is done using the Extended Euclidean algorithm.
+    </li>
+    <li>Public key: <strong>(e, n)</strong>. Private key: <strong>(d, n)</strong> (or (d, p, q) for CRT speedup).</li>
+</ol>
+
+<h4>Encryption and Decryption</h4>
+<p>
+    To encrypt a message <em>m</em> (represented as an integer m &lt; n):
+</p>
+<pre><code>c ≡ m<sup>e</sup> (mod n)</code></pre>
+<p>
+    To decrypt:
+</p>
+<pre><code>m ≡ c<sup>d</sup> (mod n)</code></pre>
+<p>
+    The correctness follows from Euler’s theorem: since <em>d ≡ e<sup>–1</sup> (mod φ(n))</em>, we have
+    <em>e·d = 1 + k·φ(n)</em> for some integer <em>k</em>, so
+    <em>c<sup>d</sup> ≡ (m<sup>e</sup>)<sup>d</sup> = m<sup>1 + k·φ(n)</sup> ≡ m·(m<sup>φ(n)</sup>)<sup>k</sup> ≡ m (mod
+        n)</em>.
+</p>
+
+<div class="callout">
+    <strong>⚠️ Practical RSA:</strong> Messages are never encrypted directly. Instead, a random
+    <strong>symmetric session key</strong> is encrypted with RSA, and the actual data is encrypted under that
+    session key (hybrid encryption). Also, padding schemes like <strong>OAEP</strong> are mandatory to prevent
+    attacks.
+</div>
+
+<h3>Elliptic Curve Cryptography (ECC)</h3>
+<p>
+    ECC offers the same security as RSA with <strong>much smaller key sizes</strong> and faster computations.
+    It is based on the algebraic structure of <strong>elliptic curves over finite fields</strong>.
+</p>
+<p>
+    An elliptic curve over a prime field GF(p) is defined by the equation
+    <strong>y<sup>2</sup> = x<sup>3</sup> + a·x + b (mod p)</strong>,
+    with the curve parameters (p, a, b, a generator point G, and order n). The set of points, together with a
+    <strong>point at infinity</strong> O, forms an abelian group under a geometrically defined addition operation.
+</p>
+<p>
+    The security of ECC relies on the <strong>Elliptic Curve Discrete Logarithm Problem (ECDLP)</strong>:
+    given points <em>P</em> and <em>Q</em> where <em>Q = k·P</em>, it is computationally infeasible to find the scalar
+    <em>k</em>.
+</p>
+
+<h4>ECC Key Exchange and Encryption</h4>
+<ul>
+    <li><strong>ECDH</strong> – Elliptic Curve Diffie‑Hellman key exchange.</li>
+    <li><strong>ECIES</strong> – Elliptic Curve Integrated Encryption Scheme (provides confidentiality).</li>
+    <li><strong>ECDSA</strong> – Elliptic Curve Digital Signature Algorithm.</li>
+</ul>
+<p>
+    For the same security level, an ECC key of 256 bits is comparable to an RSA key of 3072 bits, making ECC ideal for
+    mobile devices and IoT.
+</p>
+
+<h3>Key Management and the Diffie‑Hellman Key Exchange</h3>
+<p>
+    <strong>Key management</strong> encompasses the generation, storage, distribution, rotation, and destruction of
+    cryptographic keys. In public‑key systems, the secure distribution of public keys is achieved via
+    <strong>Public Key Infrastructure (PKI)</strong> and digital certificates.
+</p>
+
+<h4>Diffie‑Hellman Key Exchange Protocol</h4>
+<p>
+    Invented by Whitfield Diffie and Martin Hellman in 1976, this protocol enables two parties to agree on a shared
+    secret over an insecure channel without any prior secrets.
+</p>
+<ol>
+    <li>Alice and Bob agree on public parameters: a large prime <em>p</em> and a generator <em>g</em> of the
+        multiplicative group modulo <em>p</em>.</li>
+    <li>Alice chooses a random private key <em>a</em> (1 &lt; a &lt; p‑1) and computes
+        <strong>A ≡ g<sup>a</sup> (mod p)</strong>. She sends A to Bob.
+    </li>
+    <li>Bob chooses a random private key <em>b</em> and computes <strong>B ≡ g<sup>b</sup> (mod p)</strong>. He sends
+        B to Alice.</li>
+    <li>Alice computes the shared secret: <strong>s ≡ B<sup>a</sup> (mod p)</strong>.</li>
+    <li>Bob computes: <strong>s ≡ A<sup>b</sup> (mod p)</strong>.</li>
+</ol>
+<p>
+    Both end up with the same value because <em>B<sup>a</sup> ≡ (g<sup>b</sup>)<sup>a</sup> ≡ g<sup>ab</sup> ≡
+        (g<sup>a</sup>)<sup>b</sup> ≡ A<sup>b</sup> (mod p)</em>. The beauty: an eavesdropper who sees
+    <em>p, g, A, B</em> cannot compute <em>g<sup>ab</sup></em> without solving the discrete logarithm problem.
+</p>
+
+<div class="callout">
+    <strong>💡 Man‑in‑the‑Middle Warning:</strong> Basic DH is secure against passive eavesdropping but vulnerable to
+    active attacks. To prevent this, the exchanged values <em>A</em> and <em>B</em> must be authenticated (e.g., using
+    digital signatures or a PKI).
+</div>
+
+<h3>Key Management Challenges</h3>
+<ul>
+    <li><strong>Key generation</strong> – must use cryptographically secure random number generators (CSPRNGs).</li>
+    <li><strong>Key storage</strong> – private keys must be protected, often using hardware security modules (HSMs).
+    </li>
+    <li><strong>Key distribution</strong> – public keys are distributed via certificates and PKI; symmetric keys via
+        key exchange protocols.</li>
+    <li><strong>Key revocation</strong> – certificates may need to be revoked if keys are compromised; this is managed
+        by Certificate Revocation Lists (CRLs) or the Online Certificate Status Protocol (OCSP).</li>
+    <li><strong>Key rotation</strong> – regularly updating keys limits the damage of a potential breach.</li>
+</ul>
+
+<h3>Comparing RSA and ECC</h3>
+<table>
+    <tr>
+        <th>Aspect</th>
+        <th>RSA</th>
+        <th>ECC</th>
+    </tr>
+    <tr>
+        <td>Underlying hard problem</td>
+        <td>Integer factorisation</td>
+        <td>Elliptic curve discrete log</td>
+    </tr>
+    <tr>
+        <td>Key size (128‑bit security)</td>
+        <td>3072 bits</td>
+        <td>256 bits</td>
+    </tr>
+    <tr>
+        <td>Performance</td>
+        <td>Slower key generation; faster encryption (small public exponent)</td>
+        <td>Faster overall, especially key gen and signing</td>
+    </tr>
+    <tr>
+        <td>Use cases</td>
+        <td>Legacy systems, TLS, PGP</td>
+        <td>Mobile, IoT, blockchain, modern TLS</td>
+    </tr>
+</table>
+
+<h3>Mathematical Example (RSA)</h3>
+<p>Let <em>p=3</em>, <em>q=11</em>. Then <em>n=33</em>, <em>φ(n)=20</em>. Choose <em>e=7</em>. Compute
+    <em>d = 7<sup>–1</sup> mod 20 = 3</em>. Encrypt <em>m=2</em>: <em>c = 2<sup>7</sup> mod 33 = 128 mod 33 = 29</em>.
+    Decrypt: <em>29<sup>3</sup> mod 33 = 24389 mod 33 = 2</em> (since 24389 = 739*33 + 2).
+</p>
+
+<p>
+    Public‑key cryptography revolutionised secure communication by removing the need for pre‑shared secrets.
+    In the following modules, we'll explore how these primitives are used for authentication, digital signatures,
+    and network security.
+</p>

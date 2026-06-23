@@ -1,0 +1,172 @@
+<h3>The Unique Challenges of Wireless Security</h3>
+<p>
+    Wireless networks broadcast data over radio waves, making them inherently more vulnerable than wired
+    networks. Attackers can eavesdrop without physical access, inject frames, or mount denial‑of‑service
+    attacks from a distance. This module explores the security mechanisms used in <strong>Wireless LANs
+        (Wi‑Fi)</strong>, <strong>cellular networks</strong>, and emerging <strong>ad‑hoc and sensor
+        networks</strong>.
+</p>
+
+<h3>Security in Wireless LANs (IEEE 802.11)</h3>
+<p>
+    Wi‑Fi security has evolved through several generations, each addressing the weaknesses of its
+    predecessor.
+</p>
+
+<h4>WEP (Wired Equivalent Privacy) – Broken Legacy</h4>
+<p>
+    WEP was the first security standard for 802.11, using the <strong>RC4 stream cipher</strong> with a
+    40‑bit or 104‑bit key concatenated with a 24‑bit <strong>Initialisation Vector (IV)</strong>. Severe
+    design flaws led to its complete compromise:
+</p>
+<ul>
+    <li><strong>Short IVs</strong> (24 bits) repeat quickly, allowing key recovery through statistical
+        attacks (Fluhrer–Mantin–Shamir).</li>
+    <li><strong>Weak integrity check (CRC‑32)</strong> enables packet forgery.</li>
+    <li><strong>No key management</strong> – keys are static and shared among all users.</li>
+</ul>
+<div class="callout">
+    <strong>⚠️ Never use WEP.</strong> It can be cracked in minutes with tools like Aircrack‑ng.
+</div>
+
+<h4>WPA (Wi‑Fi Protected Access) – The Interim Fix</h4>
+<p>
+    WPA was introduced as an emergency upgrade while the 802.11i standard was being finalised. It retained
+    RC4 but introduced <strong>TKIP (Temporal Key Integrity Protocol)</strong>:
+</p>
+<ul>
+    <li>Per‑packet key mixing (using a 48‑bit IV).</li>
+    <li><strong>Michael</strong> message integrity code (MIC) replacing CRC‑32.</li>
+    <li>Dynamic key generation via <strong>802.1X/EAP</strong> (WPA‑Enterprise) or a
+        <strong>Pre‑Shared Key (PSK)</strong> (WPA‑Personal).
+    </li>
+</ul>
+<p>TKIP was designed as a software upgrade for older hardware, but it is now deprecated due to
+    cryptographic weaknesses.</p>
+
+<h4>WPA2 (IEEE 802.11i) – The Robust Standard</h4>
+<p>
+    WPA2 mandates <strong>CCMP (Counter Mode with CBC‑MAC Protocol)</strong>, based on the
+    <strong>AES block cipher</strong>. CCMP provides:
+</p>
+<ul>
+    <li>Data confidentiality (AES‑CTR).</li>
+    <li>Integrity and origin authentication (CBC‑MAC).</li>
+    <li>Replay protection (packet number).</li>
+</ul>
+<p>
+    WPA2‑Personal uses a 4‑way handshake to derive per‑session keys from a PSK.
+    WPA2‑Enterprise integrates with a <strong>RADIUS server</strong> for 802.1X authentication, allowing
+    unique credentials per user.
+</p>
+
+<h4>WPA3 – The Current Standard</h4>
+<p>
+    WPA3 brings major security improvements over WPA2:
+</p>
+<ul>
+    <li><strong>Simultaneous Authentication of Equals (SAE)</strong> – a password‑authenticated key
+        exchange resistant to offline dictionary attacks (Dragonfly protocol).</li>
+    <li><strong>Forward secrecy</strong> – even if the password is later compromised, past session keys
+        cannot be recovered.</li>
+    <li><strong>Protected Management Frames (PMF)</strong> – mandatory, preventing deauthentication
+        attacks.</li>
+    <li><strong>Wi‑Fi Enhanced Open</strong> – opportunistic encryption for open networks (OWE).</li>
+</ul>
+
+<h4>802.1X and EAP</h4>
+<p>
+    <strong>IEEE 802.1X</strong> provides port‑based network access control. Before a client can send
+    data, it must authenticate. The architecture involves:
+</p>
+<ul>
+    <li><strong>Supplicant</strong> – the client device.</li>
+    <li><strong>Authenticator</strong> – the access point or switch.</li>
+    <li><strong>Authentication Server</strong> – typically a RADIUS server.</li>
+</ul>
+<p>
+    The <strong>Extensible Authentication Protocol (EAP)</strong> carries the authentication messages.
+    Common EAP methods: <strong>PEAP</strong>, <strong>EAP‑TLS</strong>, <strong>EAP‑TTLS</strong>,
+    <strong>EAP‑SIM</strong>.
+</p>
+
+<h3>Security in Cellular Networks</h3>
+<p>
+    Cellular networks have evolved from analogue (1G) to all‑IP (5G), with security improving at each
+    generation.
+</p>
+
+<h4>2G (GSM) Security</h4>
+<ul>
+    <li><strong>A3/A8/A5 algorithms</strong> – used for authentication, key generation, and encryption
+        (A5/1 stream cipher).</li>
+    <li><strong>Weaknesses:</strong> no mutual authentication (only network authenticates phone); fake
+        base stations (IMSI catchers) possible; A5/1 later broken.</li>
+</ul>
+
+<h4>3G (UMTS) Security</h4>
+<ul>
+    <li><strong>Mutual authentication</strong> – the phone also authenticates the network.</li>
+    <li><strong>Integrity protection</strong> for signalling messages.</li>
+    <li><strong>Stronger encryption</strong> (KASUMI block cipher) with longer keys.</li>
+</ul>
+
+<h4>4G (LTE) and 5G Security</h4>
+<ul>
+    <li>Stronger cryptographic algorithms (AES‑based, SNOW 3G, ZUC).</li>
+    <li>Hierarchical key derivation with forward/backward secrecy between handovers.</li>
+    <li>5G introduces <strong>SUCI (Subscription Concealed Identifier)</strong> to protect the permanent
+        identity (SUPI/IMSI) from being sent in clear text.</li>
+    <li><strong>SEAF (Security Anchor Function)</strong> and <strong>Authentication Server Function
+            (AUSF)</strong> as part of the 5G core.</li>
+</ul>
+
+<h3>Ad‑hoc and Sensor Network Security</h3>
+
+<h4>Mobile Ad‑hoc Networks (MANETs)</h4>
+<p>
+    MANETs lack fixed infrastructure; nodes act as routers. This dynamic, self‑organising nature
+    creates unique security challenges:
+</p>
+<ul>
+    <li><strong>No central authority</strong> – distributed trust models needed.</li>
+    <li><strong>Routing attacks:</strong> black hole, wormhole, sinkhole, rushing attacks.</li>
+    <li><strong>Sybil attack</strong> – a single node forges multiple identities to subvert routing
+        or data aggregation.</li>
+    <li><strong>Resource constraints</strong> – battery and bandwidth limit the use of heavyweight
+        cryptography.</li>
+</ul>
+
+<h4>Wireless Sensor Networks (WSNs)</h4>
+<p>
+    WSNs consist of many small, low‑power sensor nodes that collect environmental data. Their security
+    is particularly challenging due to extreme resource limitations:
+</p>
+<ul>
+    <li><strong>Key management:</strong> pre‑distribution schemes (e.g., random key pre‑distribution)
+        allow nodes to establish pair‑wise keys after deployment.</li>
+    <li><strong>Lightweight cryptography:</strong> algorithms like PRESENT, SPECK, and ASCON are
+        designed for constrained devices.</li>
+    <li><strong>Attacks:</strong> node capture, sleep deprivation, side‑channel analysis, physical
+        tampering.</li>
+    <li><strong>Authentication and integrity</strong> – often rely on symmetric MACs and hash functions
+        due to the high cost of public‑key operations.</li>
+</ul>
+
+<h4>Defence Mechanisms</h4>
+<ul>
+    <li><strong>Intrusion Detection Systems (IDS)</strong> – monitor for anomalous behaviour
+        (e.g., sudden routing changes).</li>
+    <li><strong>Secure routing protocols</strong> (e.g., Ariadne, SEAD for MANETs) that incorporate
+        authentication.</li>
+    <li><strong>Tamper‑proof packaging</strong> and secure hardware modules for sensors.</li>
+    <li><strong>Redundancy and diversity</strong> to cope with compromised nodes.</li>
+</ul>
+
+<h3>Summary</h3>
+<p>
+    Wireless security has come a long way from the broken WEP to the robust, forward‑secret WPA3.
+    Cellular networks continue to strengthen their security architectures, while ad‑hoc and sensor
+    networks remain an active research frontier. In the final module, we step back to look at the
+    broader picture – securing the entire system, from intruders to firewalls.
+</p>
